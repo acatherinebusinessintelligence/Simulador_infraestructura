@@ -574,21 +574,40 @@
     }
 
     function startTimer(){
-      stopTimer();
-      state.timerId = setInterval(() => {
-        state.timeLeft -= 1;
-        if(state.timeLeft <= 0){
-          state.timeLeft = 0;
-          state.logs.unshift('[SYS] Tiempo agotado. El incidente escala automáticamente.');
-          state.lives = Math.max(0, state.lives - 1);
-          stopTimer();
-          state.screen = 'results';
-          computeRubric();
-          saveRanking();
-        }
-        render();
-      }, 1000);
+  stopTimer();
+
+  state.timerId = setInterval(() => {
+
+    state.timeLeft -= 1;
+
+    const timerEl = document.getElementById("timerDisplay");
+
+    if(timerEl){
+      timerEl.textContent = "⏱ " + formatTime(state.timeLeft);
     }
+
+    if(state.timeLeft <= 0){
+
+      state.timeLeft = 0;
+
+      state.logs.unshift('[SYS] Tiempo agotado.');
+
+      state.lives = Math.max(0, state.lives - 1);
+
+      stopTimer();
+
+      state.screen = "results";
+
+      computeRubric();
+
+      saveRanking();
+
+      render();
+
+    }
+
+  },1000);
+}
 
     function stopTimer(){ if(state.timerId){ clearInterval(state.timerId); state.timerId = null; } }
 
@@ -978,7 +997,7 @@
                   <p class="mt-3 text-slate-400 max-w-3xl leading-relaxed">${mission.objective}</p>
                 </div>
                 <div class="flex flex-wrap gap-2">
-                  <div class="rounded-2xl px-4 py-3 border border-slate-700 bg-slate-900/70 font-semibold text-sky-300">⏱ ${formatTime(state.timeLeft)}</div>
+                  <div id="timerDisplay" class="rounded-2xl px-4 py-3 border border-slate-700 bg-slate-900/70 font-semibold text-sky-300"> ⏱ ${formatTime(state.timeLeft)}</div>
                   <div class="rounded-2xl px-4 py-3 border border-slate-700 bg-slate-900/70 font-semibold text-rose-300">❤ ${state.lives}</div>
                   <button onclick="resetRun()" class="rounded-2xl px-4 py-3 border border-slate-700 bg-slate-900/70 hover:border-slate-500 font-semibold">Salir</button>
                 </div>
